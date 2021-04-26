@@ -1,6 +1,11 @@
 module.exports = {
+  title: '仲恺农业工程学院后台管理系统',
 
-  title: 'Vue Admin Template',
+  /**
+   * @type {boolean} true | false
+   * @description Whether need tagsView
+   */
+  tagsView: true,
 
   /**
    * @type {boolean} true | false

@@ -31,131 +31,224 @@ import Layout from '@/layout'
  * all roles can be accessed
  */
 export const constantRoutes = [
+  // 登录界面
   {
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true
   },
 
+  // 404 界面
   {
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true
   },
 
+  // 首页
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
-    children: [{
-      path: 'dashboard',
-      name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
-    }]
-  },
-
-  {
-    path: '/example',
-    component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'el-icon-s-help' },
+    redirect: '/home',
     children: [
       {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
+        path: 'home',
+        name: 'Home',
+        component: () => import('@/views/home/index'),
+        meta: { title: '首页', icon: 'el-icon-s-home', affix: true }
       }
     ]
   },
 
+  // 图片管理
   {
-    path: '/form',
+    path: '/image',
+    component: Layout,
+    redirect: '/image/banner',
+    name: 'Image',
+    meta: { title: '图片管理', icon: 'el-icon-picture' },
+    children: [
+      {
+        path: 'banner',
+        name: 'Banner',
+        component: () => import('@/views/image/banner'),
+        meta: { title: 'Banner' }
+      },
+      {
+        path: 'carousel',
+        name: 'Carousel',
+        component: () => import('@/views/image/carousel'),
+        meta: { title: '轮播图' }
+      }
+    ]
+  },
+
+  // 学校概况管理
+  {
+    path: '/school-profile',
+    component: Layout,
+    redirect: '/school-profile/school-introduce',
+    name: 'SchoolProfile',
+    meta: { title: '学校概况管理', icon: 'example' },
+    children: [
+      {
+        path: 'school-introduce',
+        name: 'SchoolIntroduce',
+        component: () => import('@/views/school-profile/school-introduce'),
+        meta: { title: '学校介绍' }
+      },
+      {
+        path: 'incumbent',
+        name: 'Incumbent',
+        component: () => import('@/views/school-profile/incumbent'),
+        meta: { title: '现任领导' }
+      },
+      {
+        path: 'leader-care',
+        name: 'LeaderCare',
+        component: () => import('@/views/school-profile/leader-care'),
+        meta: { title: '领导关怀' }
+      },
+      {
+        path: 'school-scenery',
+        name: 'SchoolScenery',
+        component: () => import('@/views/school-profile/school-scenery'),
+        meta: { title: '校园风光' }
+      },
+      {
+        path: 'school-constitution',
+        name: 'SchoolConstitution',
+        component: () => import('@/views/school-profile/school-constitution'),
+        meta: { title: '学校章程' }
+      }
+    ]
+  },
+
+  // 新闻管理
+  {
+    path: '/news',
+    component: Layout,
+    redirect: '/news/categories',
+    name: 'News',
+    meta: {
+      title: '新闻管理',
+      icon: 'form'
+    },
+    children: [
+      {
+        path: 'categories',
+        name: 'NewsCategories',
+        component: () => import('@/views/news/categories'),
+        meta: { title: '新闻类别' }
+      },
+      {
+        path: 'create',
+        component: () => import('@/views/news/create'),
+        hidden: true,
+        name: 'CreateNews',
+        meta: { title: '新建新闻' }
+      },
+      {
+        path: 'edit/:id(\\d+)',
+        component: () => import('@/views/news/edit'),
+        name: 'EditNews',
+        meta: { title: '编辑新闻', noCache: true, activeMenu: '/news/news-list' },
+        hidden: true
+      },
+      {
+        path: 'news-list',
+        component: () => import('@/views/news/list/index'),
+        name: 'NewsList',
+        meta: { title: '新闻列表' }
+      }
+    ]
+  },
+
+  // 专题管理
+  {
+    path: '/special',
+    component: Layout,
+    redirect: '/special/categories',
+    name: 'Special',
+    meta: {
+      title: '专题管理',
+      icon: 'el-icon-s-flag'
+    },
+    children: [
+      {
+        path: 'categories',
+        name: 'SpecialCategories',
+        component: () => import('@/views/special/categories'),
+        meta: { title: '专题类别' }
+      },
+      {
+        path: 'create',
+        component: () => import('@/views/special/create'),
+        hidden: true,
+        name: 'CreateSpecial',
+        meta: { title: '新建专题' }
+      },
+      {
+        path: 'edit/:id(\\d+)',
+        component: () => import('@/views/special/edit'),
+        name: 'EditSpecial',
+        meta: { title: '编辑专题', noCache: true, activeMenu: '/special/news-list' },
+        hidden: true
+      },
+      {
+        path: 'special-list',
+        component: () => import('@/views/special/list/index'),
+        name: 'SpecialList',
+        meta: { title: '专题项列表' }
+      }
+    ]
+  },
+
+  // 链接管理
+  {
+    path: '/links',
+    component: Layout,
+    redirect: '/links/categories',
+    name: 'Links',
+    meta: { title: '链接管理', icon: 'el-icon-link' },
+    children: [
+      {
+        path: 'categories',
+        name: 'LinksCategories',
+        component: () => import('@/views/links/categories'),
+        meta: { title: '链接类别' }
+      },
+      {
+        path: 'link-list',
+        name: 'LinkList',
+        component: () => import('@/views/links/list/index'),
+        meta: { title: '链接项列表' }
+      }
+    ]
+  },
+
+  // 页脚管理
+  {
+    path: '/footer',
     component: Layout,
     children: [
       {
         path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
+        name: 'Footer',
+        component: () => import('@/views/footer/index'),
+        meta: { title: '页脚管理', icon: 'tree' }
       }
     ]
   },
 
-  {
-    path: '/nested',
-    component: Layout,
-    redirect: '/nested/menu1',
-    name: 'Nested',
-    meta: {
-      title: 'Nested',
-      icon: 'nested'
-    },
-    children: [
-      {
-        path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
-        name: 'Menu1',
-        meta: { title: 'Menu1' },
-        children: [
-          {
-            path: 'menu1-1',
-            component: () => import('@/views/nested/menu1/menu1-1'),
-            name: 'Menu1-1',
-            meta: { title: 'Menu1-1' }
-          },
-          {
-            path: 'menu1-2',
-            component: () => import('@/views/nested/menu1/menu1-2'),
-            name: 'Menu1-2',
-            meta: { title: 'Menu1-2' },
-            children: [
-              {
-                path: 'menu1-2-1',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
-                name: 'Menu1-2-1',
-                meta: { title: 'Menu1-2-1' }
-              },
-              {
-                path: 'menu1-2-2',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
-                name: 'Menu1-2-2',
-                meta: { title: 'Menu1-2-2' }
-              }
-            ]
-          },
-          {
-            path: 'menu1-3',
-            component: () => import('@/views/nested/menu1/menu1-3'),
-            name: 'Menu1-3',
-            meta: { title: 'Menu1-3' }
-          }
-        ]
-      },
-      {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        name: 'Menu2',
-        meta: { title: 'menu2' }
-      }
-    ]
-  },
-
+  // 去官网
   {
     path: 'external-link',
     component: Layout,
     children: [
       {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
+        path: 'https://baidu.com',
+        meta: { title: '去官网', icon: 'link' }
       }
     ]
   },
@@ -164,11 +257,12 @@ export const constantRoutes = [
   { path: '*', redirect: '/404', hidden: true }
 ]
 
-const createRouter = () => new Router({
-  // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
-})
+const createRouter = () =>
+  new Router({
+    // mode: 'history', // require service support
+    scrollBehavior: () => ({ y: 0 }),
+    routes: constantRoutes
+  })
 
 const router = createRouter()
 
