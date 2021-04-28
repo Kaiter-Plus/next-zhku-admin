@@ -8,7 +8,9 @@
               :value="category.id" />
           </el-select>
         </el-form-item>
-        <SourceUrlDropdown style="margin-left: 10px" v-model="postForm.sourceLink" />
+        <el-form-item prop="sourceLink" style="display:inline-block;">
+          <SourceUrlDropdown style="margin-left: 10px" prop="sourceLink" v-model="postForm.sourceLink" />
+        </el-form-item>
         <el-button v-loading="loading" style="margin-left: 10px" type="success" @click="submitForm">
           发布
         </el-button>
@@ -32,7 +34,7 @@
                 </el-col>
 
                 <el-col :span="10">
-                  <el-form-item label-width="120px" label="发布时间:" class="postInfo-container-item">
+                  <el-form-item label-width="120px" prop="publishTime" label="发布时间:" class="postInfo-container-item">
                     <el-date-picker v-model="postForm.publishTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss"
                       placeholder="选择时间" />
                   </el-form-item>
@@ -72,18 +74,14 @@ import Tinymce from '@/components/Tinymce'
 import Upload from '@/components/Upload/SingleImage4'
 import MDinput from '@/components/MDinput'
 import Sticky from '@/components/Sticky' // 粘性header组件
-// import { validURL } from '@/utils/validate'
-import { fetchNewsCategory, fetchNewsById, updateNewsById, createNews } from '@/api/news'
-import { searchUser } from '@/api/remote-search'
-import {
-  CommentDropdown,
-  PlatformDropdown,
-  SourceUrlDropdown,
-} from './Dropdown'
+import { validURL } from '@/utils/validate'
+import { fetchAllNewsCategory, fetchNewsById, updateNewsById, createNews } from '@/api/news'
+import { SourceUrlDropdown } from './Dropdown'
 
 const defaultForm = {
+  category: 3,
   title: '',
-  conver: '',
+  cover: '',
   author: '',
   summary: '',
   content: '',
@@ -99,8 +97,6 @@ export default {
     MDinput,
     Upload,
     Sticky,
-    CommentDropdown,
-    PlatformDropdown,
     SourceUrlDropdown,
   },
   props: {
@@ -110,42 +106,46 @@ export default {
     }
   },
   data() {
-    // const validateRequire = (rule, value, callback) => {
-    //   if (value === '') {
-    //     this.$message({
-    //       message: rule.field + '为必传项',
-    //       type: 'error',
-    //     })
-    //     callback(new Error(rule.field + '为必传项'))
-    //   } else {
-    //     callback()
-    //   }
-    // }
-    // const validateSourceUri = (rule, value, callback) => {
-    //   if (value) {
-    //     if (validURL(value)) {
-    //       callback()
-    //     } else {
-    //       this.$message({
-    //         message: '外链url填写不正确',
-    //         type: 'error',
-    //       })
-    //       callback(new Error('外链url填写不正确'))
-    //     }
-    //   } else {
-    //     callback()
-    //   }
-    // }
+    const validateRequire = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error(rule.field + '为必传项'))
+      } else {
+        callback()
+      }
+    }
+    const validateSourceUri = (rule, value, callback) => {
+      if (value) {
+        if (validURL(value)) {
+          callback()
+        } else {
+          this.$message({
+            message: '外链url填写不正确',
+            type: 'error',
+          })
+          callback(new Error('外链url填写不正确'))
+        }
+      } else {
+        callback()
+      }
+    }
+    const validatepublishTime = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请选择发布时间'))
+      } else {
+        callback()
+      }
+    }
     return {
       categories: null,
       postForm: Object.assign({}, defaultForm),
       loading: false,
       userListOptions: [],
       rules: {
-        // image_uri: [{ validator: validateRequire }],
-        // title: [{ validator: validateRequire }],
-        // content: [{ validator: validateRequire }],
-        // source_uri: [{ validator: validateSourceUri, trigger: 'blur' }],
+        category: [{ validator: validateRequire }],
+        title: [{ validator: validateRequire }],
+        content: [{ validator: validateRequire }],
+        sourceLink: [{ validator: validateSourceUri }],
+        publishTime: [{ validator: validatepublishTime }]
       },
       tempRoute: {},
     }
@@ -159,10 +159,9 @@ export default {
     if (this.isEdit) {
       const id = this.$route.params && this.$route.params.id
       this.fetchData(id)
+    } else {
+      this.getCategory()
     }
-
-    this.getCategory()
-
     // Why need to make a copy of this.$route here?
     // Because if you enter this page and quickly switch tag, may be in the execution of the setTagsViewTitle function, this.$route is no longer pointing to the current page
     // https://github.com/PanJiaChen/vue-element-admin/issues/1221
@@ -171,11 +170,8 @@ export default {
   methods: {
     getCategory() {
       this.loading = true
-      fetchNewsCategory().then(({ data }) => {
-        // 排除学校介绍和领导关怀
-        this.categories = data.filter(v => {
-          return v.id > 2
-        })
+      fetchAllNewsCategory().then(({ data }) => {
+        this.categories = data
         this.loading = false
       })
     },
@@ -210,37 +206,45 @@ export default {
     submitForm() {
       if (this.isEdit) {
         // 如果是编辑模式则更新文章
-        updateNewsById(this.postForm).then(({ message }) => {
-          this.$message({
-            message,
-            type: 'success'
-          })
+        this.$refs.postForm.validate(valid => {
+          if (valid) {
+            this.loading = true
+            updateNewsById(this.postForm).then(({ message }) => {
+              this.$message({
+                message,
+                type: 'success'
+              })
+              this.loading = false
+            })
+          } else {
+            this.$message({
+              message: '请检查您输入的内容',
+              type: 'warning'
+            })
+            return false
+          }
         })
       } else {
         // 否则添加新文章
-        createNews(this.postForm).then(({ message }) => {
-          this.$message({
-            message,
-            type: 'success'
-          })
+        this.$refs.postForm.validate(valid => {
+          if (valid) {
+            this.loading = true
+            createNews(this.postForm).then(({ message }) => {
+              this.$message({
+                message,
+                type: 'success'
+              })
+              this.loading = false
+            })
+          } else {
+            this.$message({
+              message: '请检查您输入的内容',
+              type: 'warning'
+            })
+            return false
+          }
         })
       }
-      // this.$refs.postForm.validate(valid => {
-      //   if (valid) {
-      //     this.loading = true
-      //     this.$notify({
-      //       title: '成功',
-      //       message: '发布文章成功',
-      //       type: 'success',
-      //       duration: 2000,
-      //     })
-      //     this.postForm.status = 'published'
-      //     this.loading = false
-      //   } else {
-      //     console.log('error submit!!')
-      //     return false
-      //   }
-      // })
     },
   },
 }

@@ -32,7 +32,7 @@
                 </el-col>
 
                 <el-col :span="10">
-                  <el-form-item label-width="120px" label="发布时间:" class="postInfo-container-item">
+                  <el-form-item label-width="120px" prop="publishTime" label="发布时间:" class="postInfo-container-item">
                     <el-date-picker v-model="postForm.publishTime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss"
                       placeholder="选择时间" />
                   </el-form-item>
@@ -67,18 +67,15 @@
 import Tinymce from '@/components/Tinymce'
 import MDinput from '@/components/MDinput'
 import Sticky from '@/components/Sticky' // 粘性header组件
-// import { validURL } from '@/utils/validate'
-import { fetchSpecialCategory, fetchSpecialById, updateSpecialById, createSpecial } from '@/api/special'
+import { validURL } from '@/utils/validate'
+import { fetchAllSpecialCategory, fetchSpecialById, updateSpecialById, createSpecial } from '@/api/special'
 import { searchUser } from '@/api/remote-search'
-import {
-  CommentDropdown,
-  PlatformDropdown,
-  SourceUrlDropdown,
-} from './Dropdown'
+import { SourceUrlDropdown, } from './Dropdown'
 
 const defaultForm = {
+  category: 1,
   title: '',
-  conver: '',
+  cover: '',
   author: '',
   summary: '',
   content: '',
@@ -93,8 +90,6 @@ export default {
     Tinymce,
     MDinput,
     Sticky,
-    CommentDropdown,
-    PlatformDropdown,
     SourceUrlDropdown,
   },
   props: {
@@ -104,42 +99,46 @@ export default {
     }
   },
   data() {
-    // const validateRequire = (rule, value, callback) => {
-    //   if (value === '') {
-    //     this.$message({
-    //       message: rule.field + '为必传项',
-    //       type: 'error',
-    //     })
-    //     callback(new Error(rule.field + '为必传项'))
-    //   } else {
-    //     callback()
-    //   }
-    // }
-    // const validateSourceUri = (rule, value, callback) => {
-    //   if (value) {
-    //     if (validURL(value)) {
-    //       callback()
-    //     } else {
-    //       this.$message({
-    //         message: '外链url填写不正确',
-    //         type: 'error',
-    //       })
-    //       callback(new Error('外链url填写不正确'))
-    //     }
-    //   } else {
-    //     callback()
-    //   }
-    // }
+    const validateRequire = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error(rule.field + '为必传项'))
+      } else {
+        callback()
+      }
+    }
+    const validateSourceUri = (rule, value, callback) => {
+      if (value) {
+        if (validURL(value)) {
+          callback()
+        } else {
+          this.$message({
+            message: '外链url填写不正确',
+            type: 'error',
+          })
+          callback(new Error('外链url填写不正确'))
+        }
+      } else {
+        callback()
+      }
+    }
+    const validatepublishTime = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请选择发布时间'))
+      } else {
+        callback()
+      }
+    }
     return {
       categories: null,
       postForm: Object.assign({}, defaultForm),
       loading: false,
       userListOptions: [],
       rules: {
-        // image_uri: [{ validator: validateRequire }],
-        // title: [{ validator: validateRequire }],
-        // content: [{ validator: validateRequire }],
-        // source_uri: [{ validator: validateSourceUri, trigger: 'blur' }],
+        category: [{ validator: validateRequire }],
+        title: [{ validator: validateRequire }],
+        content: [{ validator: validateRequire }],
+        sourceLink: [{ validator: validateSourceUri }],
+        publishTime: [{ validator: validatepublishTime }]
       },
       tempRoute: {},
     }
@@ -165,7 +164,7 @@ export default {
   methods: {
     getCategory() {
       this.loading = true
-      fetchSpecialCategory().then(({ data }) => {
+      fetchAllSpecialCategory().then(({ data }) => {
         this.categories = data
         this.loading = false
       })
@@ -198,19 +197,43 @@ export default {
     submitForm() {
       if (this.isEdit) {
         // 如果是编辑模式则更新文章
-        updateSpecialById(this.postForm).then(({ message }) => {
-          this.$message({
-            message,
-            type: 'success'
-          })
+        this.$refs.postForm.validate(valid => {
+          if (valid) {
+            this.loading = true
+            updateSpecialById(this.postForm).then(({ message }) => {
+              this.$message({
+                message,
+                type: 'success'
+              })
+              this.loading = false
+            })
+          } else {
+            this.$message({
+              message: '请检查您输入的内容',
+              type: 'warning'
+            })
+            return false
+          }
         })
       } else {
         // 否则添加新文章
-        createSpecial(this.postForm).then(({ message }) => {
-          this.$message({
-            message,
-            type: 'success'
-          })
+        this.$refs.postForm.validate(valid => {
+          if (valid) {
+            this.loading = true
+            createSpecial(this.postForm).then(({ message }) => {
+              this.$message({
+                message,
+                type: 'success'
+              })
+              this.loading = false
+            })
+          } else {
+            this.$message({
+              message: '请检查您输入的内容',
+              type: 'warning'
+            })
+            return false
+          }
         })
       }
     },

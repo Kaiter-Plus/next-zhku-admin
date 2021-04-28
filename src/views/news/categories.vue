@@ -123,7 +123,7 @@ export default {
       this.categoryListLoading = true
       fetchNewsCategory().then(({ data }) => {
         this.total = data.total
-        this.categoryList = data.item.filter(v => v.id > 2)
+        this.categoryList = data.item
         this.categoryList.forEach(v => {
           this.$set(v, 'edit', false)
         })

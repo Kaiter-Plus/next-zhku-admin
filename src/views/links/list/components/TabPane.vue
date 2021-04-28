@@ -53,8 +53,8 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="pageQuery.page" :limit.sync="pageQuery.limit"
-      @pagination="getList" />
+    <pagination :pageSizes="pageSizes" v-show="total>0" :total="total" :page.sync="pageQuery.page"
+      :limit.sync="pageQuery.limit" @pagination="getList" />
 
   </div>
 </template>
@@ -77,9 +77,10 @@ export default {
       total: 0,
       pageQuery: {
         page: 1,
-        limit: 20
+        limit: 15
       },
       loading: false,
+      pageSizes: [15, 30, 45, 60]
     }
   },
   created() {

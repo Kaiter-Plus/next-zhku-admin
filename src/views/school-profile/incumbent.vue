@@ -53,17 +53,17 @@
     </el-table>
 
     <pagination v-show="total>0" :total="total" :page.sync="pageQuery.page" :limit.sync="pageQuery.limit"
-      @pagination="getList" />
+      @pagination="getList" :pageSizes="pageSizes" />
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="65%" :key="+new Date()">
-      <el-form ref="dataForm" :model="temp" label-position="left" label-width="70px"
+      <el-form ref="postForm" :model="temp" label-position="left" label-width="70px"
         style="width: 80%; margin-left:50px;" :rules="rules">
 
         <el-form-item label="类型" prop="category">
           <el-input v-model="category" disabled />
         </el-form-item>
 
-        <el-form-item prop="image_uri" style="margin-bottom: 30px" label-width="58px" label="图片">
+        <el-form-item prop="content" style="margin-bottom: 30px" label-width="58px" label="图片">
           <Upload :imageUrl="temp.content" :accept="accept" @file="handleFile" />
         </el-form-item>
 
@@ -136,8 +136,9 @@ export default {
       listLoading: true,
       pageQuery: {
         page: 1,
-        limit: 10
+        limit: 5
       },
+      pageSizes: [5, 10, 15, 25],
       dialogFormVisible: false,
       temp: {
         id: undefined,
@@ -159,7 +160,7 @@ export default {
       },
       rules: {
         title: [{ required: true, message: '请填写标题', trigger: 'blur' }],
-        content: [{ required: true, message: '请上传图片', trigger: 'change' }],
+        content: [{ required: true, message: '请上传图片', trigger: 'blur' }],
         introduction: [{ required: true, message: '请填写简介', trigger: 'blur' }],
         achievement: [{ required: true, message: 'title is required', trigger: 'blur' }],
         status: [{ required: true, message: 'type is required', trigger: 'change' }],
@@ -218,17 +219,27 @@ export default {
       })
     },
     updateData() {
-      const tempData = Object.assign({}, this.temp)
-      updateImageById(tempData).then(({ message }) => {
-        const index = this.list.findIndex(v => v.id === this.temp.id)
-        this.list.splice(index, 1, this.temp)
-        this.dialogFormVisible = false
-        this.$notify({
-          title: '成功',
-          message,
-          type: 'success',
-          duration: 2000
-        })
+      this.$refs.postForm.validate(valid => {
+        if (valid) {
+          const tempData = Object.assign({}, this.temp)
+          updateImageById(tempData).then(({ message }) => {
+            const index = this.list.findIndex(v => v.id === this.temp.id)
+            this.list.splice(index, 1, this.temp)
+            this.dialogFormVisible = false
+            this.$notify({
+              title: '成功',
+              message,
+              type: 'success',
+              duration: 2000
+            })
+          })
+        } else {
+          this.$message({
+            message: '请检查您输入的内容',
+            type: 'warning'
+          })
+          return false
+        }
       })
     },
     disableImage(row) {
@@ -247,7 +258,7 @@ export default {
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
       this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
+        this.$refs['postForm'].clearValidate()
       })
     },
     handleUpdate(row) {
@@ -255,7 +266,7 @@ export default {
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
+        this.$refs['postForm'].clearValidate()
       })
     },
     handleRomove(id, index) {
@@ -270,16 +281,26 @@ export default {
       })
     },
     createData() {
-      createImage(this.temp).then(({ message }) => {
-        this.$notify({
-          title: '成功',
-          message,
-          type: 'success',
-          duration: 2000
-        })
-        this.list.push(this.temp)
-        this.resetTemp()
-        this.dialogFormVisible = false
+      this.$refs.postForm.validate(valid => {
+        if (valid) {
+          createImage(this.temp).then(({ message }) => {
+            this.$notify({
+              title: '成功',
+              message,
+              type: 'success',
+              duration: 2000
+            })
+          })
+          this.list.push(this.temp)
+          this.resetTemp()
+          this.dialogFormVisible = false
+        } else {
+          this.$message({
+            message: '请检查您输入的内容',
+            type: 'warning'
+          })
+          return false
+        }
       })
     }
   }

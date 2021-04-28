@@ -52,10 +52,7 @@ export default {
     getCategory() {
       this.loading = true
       fetchAllNewsCategory().then(({ data }) => {
-        // 排除学校介绍和领导关怀
-        this.tabMapOptions = data.filter(v => {
-          return v.id > 2
-        })
+        this.tabMapOptions = data
         // 初始化 activeName
         this.activeName = this.tabMapOptions[0].description
         this.loading = false

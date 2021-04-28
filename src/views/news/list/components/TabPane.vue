@@ -77,7 +77,7 @@ export default {
       total: 0,
       pageQuery: {
         page: 1,
-        limit: 20
+        limit: 10
       },
       loading: false,
     }

@@ -62,7 +62,8 @@
       @pagination="getcarouselList" />
 
     <el-dialog title="新建轮播图" :visible.sync="dialogFormVisible">
-      <el-form :model="temp" label-position="left" label-width="90px" style="width: 80%; margin-left:50px;">
+      <el-form ref="postForm" :model="temp" :rules="rules" label-position="left" label-width="90px"
+        style="width: 80%; margin-left:50px;">
 
         <el-form-item label="类型" prop="category">
           <el-input v-model="category" disabled />
@@ -106,6 +107,13 @@ export default {
   name: 'Carousel',
   components: { Pagination, Upload },
   data() {
+    const validateRequire = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error(rule.field + '为必传项'))
+      } else {
+        callback()
+      }
+    }
     return {
       carouselList: null,
       total: 0,
@@ -127,6 +135,10 @@ export default {
       status: ['禁用', '启用'],
       // 定义可以上传的只能为图片
       acceptedFiles: ['bmp', 'jpeg', 'png', 'tif', 'gif', 'pcx', 'tga', 'exif', 'fpx', 'svg', 'psd', 'cdr', 'pcd', 'dxf', 'ufo', 'eps', 'ai', 'raw', 'WMF', 'webp', 'avif'],
+      rules: {
+        title: [{ validator: validateRequire }],
+        content: [{ validator: validateRequire }],
+      },
     }
   },
   computed: {
@@ -199,14 +211,24 @@ export default {
       })
     },
     createCarouselImage() {
-      createImage(this.temp).then(({ message }) => {
-        this.$message({
-          message,
-          type: 'success'
-        })
-        this.carouselList.push(this.temp)
-        this.resetTemp()
-        this.dialogFormVisible = false
+      this.$refs.postForm.validate(valid => {
+        if (valid) {
+          createImage(this.temp).then(({ message }) => {
+            this.$message({
+              message,
+              type: 'success'
+            })
+            this.carouselList.push(this.temp)
+            this.resetTemp()
+            this.dialogFormVisible = false
+          })
+        } else {
+          this.$message({
+            message: '请检查您输入的内容',
+            type: 'warning'
+          })
+          return false
+        }
       })
     }
   },
