@@ -247,7 +247,7 @@ export const constantRoutes = [
     component: Layout,
     children: [
       {
-        path: 'https://baidu.com',
+        path: 'http://localhost:8080',
         meta: { title: '去官网', icon: 'link' }
       }
     ]

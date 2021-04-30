@@ -55,7 +55,7 @@
     <pagination v-show="total>0" :total="total" :page.sync="pageQuery.page" :limit.sync="pageQuery.limit"
       @pagination="getList" :pageSizes="pageSizes" />
 
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="65%" :key="+new Date()">
+    <el-dialog v-if="dialogFormVisible" :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="65%">
       <el-form ref="postForm" :model="temp" label-position="left" label-width="70px"
         style="width: 80%; margin-left:50px;" :rules="rules">
 
@@ -72,11 +72,11 @@
         </el-form-item>
 
         <el-form-item label="简介" prop="introduction">
-          <Tinymce ref="editor" v-model="temp.introduction" :height="300" />
+          <Tinymce v-model="temp.introduction" :height="300" />
         </el-form-item>
 
         <el-form-item label="成就" prop="achievement">
-          <Tinymce ref="editor" v-model="temp.achievement" :height="300" />
+          <Tinymce v-model="temp.achievement" :height="300" />
         </el-form-item>
 
         <el-form-item label="状态" prop="status">
@@ -111,24 +111,6 @@ import Pagination from '@/components/Pagination'
 export default {
   name: 'Incumbent',
   components: { Tinymce, Upload, Pagination },
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'info',
-        deleted: 'danger'
-      }
-      return statusMap[status]
-    },
-    translateStatusFilter(status) {
-      const statusMap = {
-        published: '已发布',
-        draft: '草稿',
-        deleted: '已删除'
-      }
-      return statusMap[status]
-    }
-  },
   data() {
     return {
       list: null,
@@ -156,14 +138,14 @@ export default {
       dialogStatus: '',
       textMap: {
         update: '编辑图片内容',
-        create: '添加新图片'
+        create: '添加新内容'
       },
       rules: {
         title: [{ required: true, message: '请填写标题', trigger: 'blur' }],
         content: [{ required: true, message: '请上传图片', trigger: 'blur' }],
         introduction: [{ required: true, message: '请填写简介', trigger: 'blur' }],
-        achievement: [{ required: true, message: 'title is required', trigger: 'blur' }],
-        status: [{ required: true, message: 'type is required', trigger: 'change' }],
+        achievement: [{ required: true, message: '请填写成就', trigger: 'blur' }],
+        status: [{ required: true, message: '请选择状态', trigger: 'change' }],
       },
     }
   },
@@ -270,12 +252,25 @@ export default {
       })
     },
     handleRomove(id, index) {
-      removeImageById(id).then(({ message }) => {
-        this.list.splice(index, 1)
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        removeImageById(id).then(({ message }) => {
+          this.list.splice(index, 1)
+          this.$notify({
+            title: '成功',
+            message,
+            type: 'success',
+            duration: 2000
+          })
+        })
+      }).catch(() => {
         this.$notify({
-          title: '成功',
-          message,
-          type: 'success',
+          title: '取消',
+          message: '已取消删除',
+          type: 'info',
           duration: 2000
         })
       })

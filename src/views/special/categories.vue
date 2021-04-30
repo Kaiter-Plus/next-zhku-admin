@@ -3,7 +3,7 @@
 
     <div class="category-create" style="margin: 0 0 10px;text-align: right;">
       <el-button icon="el-icon-plus" style="margin-left: 10px;" type="success" @click="createCategory">
-        新建链接类型
+        新建专题类型
       </el-button>
     </div>
 
@@ -14,7 +14,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="链接类别标题">
+      <el-table-column label="专题类别标题">
         <template slot-scope="{row}">
           <template v-if="row.edit">
             <el-input v-model="row.description" class="edit-input" size="small" />
@@ -53,7 +53,7 @@
     <pagination v-show="total>0" :total="total" :page.sync="pageQuery.page" :limit.sync="pageQuery.limit"
       @pagination="getcategoryList" />
 
-    <el-dialog title="新建链接类型" :visible.sync="dialogFormVisible">
+    <el-dialog title="新建专题类型" :visible.sync="dialogFormVisible">
       <el-form :model="temp" label-position="left" label-width="90px" style="width: 80%; margin-left:50px;">
 
         <el-form-item label="标题" prop="title">
@@ -157,11 +157,22 @@ export default {
       this.temp.content = file
     },
     handleRomove(row, index) {
-      removeSpecialCategory(row).then(({ message }) => {
-        this.categoryList.splice(index, 1)
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        removeSpecialCategory(row).then(({ message }) => {
+          this.categoryList.splice(index, 1)
+          this.$message({
+            message,
+            type: 'success'
+          })
+        })
+      }).catch(() => {
         this.$message({
-          message,
-          type: 'success'
+          message: '已取消删除',
+          type: 'info'
         })
       })
     },

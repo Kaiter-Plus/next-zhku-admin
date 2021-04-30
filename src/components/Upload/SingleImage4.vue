@@ -46,7 +46,6 @@ export default {
   },
   watch: {
     imageUrl(val) {
-      console.log(1)
       this.src = val
     }
   },
