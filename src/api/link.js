@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 获取所有链接类型
 export function fetchAllLinkCategory() {
   return request({
-    url: 'http://localhost:8888/link/categories/all',
+    url: '/link/categories/all',
     method: 'get'
   })
 }
@@ -11,7 +11,7 @@ export function fetchAllLinkCategory() {
 // 获取链接类型
 export function fetchLinkCategory(page) {
   return request({
-    url: 'http://localhost:8888/link/categories',
+    url: '/link/categories',
     method: 'get',
     params: page
   })
@@ -20,7 +20,7 @@ export function fetchLinkCategory(page) {
 // 创建新的链接类型
 export function createLinkCategory(data) {
   return request({
-    url: 'http://localhost:8888/link/categories',
+    url: '/link/categories',
     method: 'post',
     data
   })
@@ -29,7 +29,7 @@ export function createLinkCategory(data) {
 // 根据 id 修改链接类型的标题
 export function updateLinkCategory(data) {
   return request({
-    url: `http://localhost:8888/link/categories`,
+    url: `/link/categories`,
     method: 'put',
     data
   })
@@ -38,7 +38,7 @@ export function updateLinkCategory(data) {
 // 根据 id 删除链接类型的标题
 export function removeLinkCategory(params) {
   return request({
-    url: `http://localhost:8888/link/categories`,
+    url: `/link/categories`,
     method: 'delete',
     params
   })
@@ -47,7 +47,7 @@ export function removeLinkCategory(params) {
 // 根据 category 获取链接
 export function fetchLinkByCategory(category, page) {
   return request({
-    url: 'http://localhost:8888/link',
+    url: '/link',
     method: 'get',
     params: { category, ...page }
   })
@@ -56,7 +56,7 @@ export function fetchLinkByCategory(category, page) {
 // 根据 id 获取链接
 export function fetchLinkById(id) {
   return request({
-    url: `http://localhost:8888/link/${id}`,
+    url: `/link/${id}`,
     method: 'get'
   })
 }
@@ -64,7 +64,7 @@ export function fetchLinkById(id) {
 // 根据 id 更新链接
 export function updateLinkById(data) {
   return request({
-    url: `http://localhost:8888/link/${data.id}`,
+    url: `/link/${data.id}`,
     method: 'put',
     data
   })
@@ -73,7 +73,7 @@ export function updateLinkById(data) {
 // 根据 id 移除链接
 export function removeLinkById(id) {
   return request({
-    url: `http://localhost:8888/link/${id}`,
+    url: `/link/${id}`,
     method: 'delete'
   })
 }
@@ -81,7 +81,7 @@ export function removeLinkById(id) {
 // 创建新的链接
 export function createLink(data) {
   return request({
-    url: 'http://localhost:8888/link',
+    url: '/link',
     method: 'post',
     data
   })

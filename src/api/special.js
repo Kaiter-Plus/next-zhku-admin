@@ -4,7 +4,7 @@ import { parseTime } from '@/utils'
 // 获取所有专题类型
 export function fetchAllSpecialCategory() {
   return request({
-    url: 'http://localhost:8888/special/categories/all',
+    url: '/special/categories/all',
     method: 'get'
   })
 }
@@ -12,7 +12,7 @@ export function fetchAllSpecialCategory() {
 // 获取专题类型
 export function fetchSpecialCategory(page) {
   return request({
-    url: 'http://localhost:8888/special/categories',
+    url: '/special/categories',
     method: 'get',
     params: page
   })
@@ -21,7 +21,7 @@ export function fetchSpecialCategory(page) {
 // 创建新的专题类型
 export function createSpecialCategory(data) {
   return request({
-    url: 'http://localhost:8888/special/categories',
+    url: '/special/categories',
     method: 'post',
     data
   })
@@ -30,7 +30,7 @@ export function createSpecialCategory(data) {
 // 根据 id 修改专题类型的标题
 export function updateSpecialCategory(data) {
   return request({
-    url: `http://localhost:8888/special/categories`,
+    url: `/special/categories`,
     method: 'put',
     data
   })
@@ -39,7 +39,7 @@ export function updateSpecialCategory(data) {
 // 根据 id 删除专题类型的标题
 export function removeSpecialCategory(params) {
   return request({
-    url: `http://localhost:8888/special/categories`,
+    url: `/special/categories`,
     method: 'delete',
     params
   })
@@ -48,7 +48,7 @@ export function removeSpecialCategory(params) {
 // 创建新的专题
 export function createSpecial(data) {
   return request({
-    url: 'http://localhost:8888/special',
+    url: '/special',
     method: 'post',
     data
   })
@@ -57,7 +57,7 @@ export function createSpecial(data) {
 // 获取所有专题
 export function fetchSpecialList() {
   return request({
-    url: 'http://localhost:8888/special',
+    url: '/special',
     method: 'get'
   })
 }
@@ -65,7 +65,7 @@ export function fetchSpecialList() {
 // 根据 category 获取专题
 export function fetchSpecialByCategory(category, page) {
   return request({
-    url: 'http://localhost:8888/special',
+    url: '/special',
     method: 'get',
     params: { category, ...page }
   })
@@ -74,7 +74,7 @@ export function fetchSpecialByCategory(category, page) {
 // 根据 id 获取专题
 export function fetchSpecialById(id) {
   return request({
-    url: `http://localhost:8888/special/${id}`,
+    url: `/special/${id}`,
     method: 'get'
   })
 }
@@ -84,7 +84,7 @@ export function updateSpecialById(data) {
   // 处理时间格式
   data.publishTime = parseTime(new Date(data.publishTime))
   return request({
-    url: `http://localhost:8888/special/${data.id}`,
+    url: `/special/${data.id}`,
     method: 'put',
     data
   })
@@ -93,7 +93,7 @@ export function updateSpecialById(data) {
 // 根据 id 移除专题
 export function removeSpecialById(id) {
   return request({
-    url: `http://localhost:8888/special/${id}`,
+    url: `/special/${id}`,
     method: 'delete'
   })
 }

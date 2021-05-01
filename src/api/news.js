@@ -4,7 +4,7 @@ import { parseTime } from '@/utils'
 // 获取所有链接类型
 export function fetchAllNewsCategory() {
   return request({
-    url: 'http://localhost:8888/news/categories/all',
+    url: '/news/categories/all',
     method: 'get'
   })
 }
@@ -12,7 +12,7 @@ export function fetchAllNewsCategory() {
 // 获取新闻类型
 export function fetchNewsCategory(page) {
   return request({
-    url: 'http://localhost:8888/news/categories',
+    url: '/news/categories',
     method: 'get',
     params: page
   })
@@ -21,7 +21,7 @@ export function fetchNewsCategory(page) {
 // 创建新的新闻类型
 export function createNewsCategory(data) {
   return request({
-    url: 'http://localhost:8888/news/categories',
+    url: '/news/categories',
     method: 'post',
     data
   })
@@ -30,7 +30,7 @@ export function createNewsCategory(data) {
 // 根据 id 修改新闻类型的标题
 export function updateNewsCategory(data) {
   return request({
-    url: `http://localhost:8888/news/categories`,
+    url: `/news/categories`,
     method: 'put',
     data
   })
@@ -39,7 +39,7 @@ export function updateNewsCategory(data) {
 // 根据 id 删除新闻类型的标题
 export function removeNewsCategory(params) {
   return request({
-    url: `http://localhost:8888/news/categories`,
+    url: `/news/categories`,
     method: 'delete',
     params
   })
@@ -48,7 +48,7 @@ export function removeNewsCategory(params) {
 // 创建新的新闻
 export function createNews(data) {
   return request({
-    url: 'http://localhost:8888/news',
+    url: '/news',
     method: 'post',
     data
   })
@@ -57,7 +57,7 @@ export function createNews(data) {
 // 获取所有新闻
 export function fetchNewsList() {
   return request({
-    url: 'http://localhost:8888/news',
+    url: '/news',
     method: 'get'
   })
 }
@@ -65,7 +65,7 @@ export function fetchNewsList() {
 // 根据 category 获取新闻
 export function fetchNewsByCategory(category, page) {
   return request({
-    url: 'http://localhost:8888/news',
+    url: '/news',
     method: 'get',
     params: { category, ...page }
   })
@@ -74,7 +74,7 @@ export function fetchNewsByCategory(category, page) {
 // 根据 id 获取新闻
 export function fetchNewsById(id) {
   return request({
-    url: `http://localhost:8888/news/${id}`,
+    url: `/news/${id}`,
     method: 'get'
   })
 }
@@ -84,7 +84,7 @@ export function updateNewsById(data) {
   // 处理时间格式
   data.publishTime = parseTime(new Date(data.publishTime))
   return request({
-    url: `http://localhost:8888/news/${data.id}`,
+    url: `/news/${data.id}`,
     method: 'put',
     data
   })
@@ -93,7 +93,7 @@ export function updateNewsById(data) {
 // 根据 id 移除新闻
 export function removeNewsById(id) {
   return request({
-    url: `http://localhost:8888/news/${id}`,
+    url: `/news/${id}`,
     method: 'delete'
   })
 }

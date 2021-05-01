@@ -69,7 +69,6 @@ import MDinput from '@/components/MDinput'
 import Sticky from '@/components/Sticky' // 粘性header组件
 import { validURL } from '@/utils/validate'
 import { fetchAllSpecialCategory, fetchSpecialById, updateSpecialById, createSpecial } from '@/api/special'
-import { searchUser } from '@/api/remote-search'
 import { SourceUrlDropdown, } from './Dropdown'
 
 const defaultForm = {
@@ -236,12 +235,6 @@ export default {
           }
         })
       }
-    },
-    getRemoteUserList(query) {
-      searchUser(query).then(response => {
-        if (!response.data.items) return
-        this.userListOptions = response.data.items.map(v => v.name)
-      })
     },
   },
 }

@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 创建新的图片
 export function createImage(data) {
   return request({
-    url: 'http://localhost:8888/image',
+    url: '/image',
     method: 'post',
     data
   })
@@ -12,7 +12,7 @@ export function createImage(data) {
 // 获取图片类型
 export function fetchImageCategory() {
   return request({
-    url: 'http://localhost:8888/image/categories',
+    url: '/image/categories',
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function fetchImageCategory() {
 // 获取所有图片
 export function fetchImageList() {
   return request({
-    url: 'http://localhost:8888/image',
+    url: '/image',
     method: 'get'
   })
 }
@@ -28,7 +28,7 @@ export function fetchImageList() {
 // 根据 category 获取图片
 export function fetchImageByCategory(category, page) {
   return request({
-    url: 'http://localhost:8888/image',
+    url: '/image',
     method: 'get',
     params: {
       category,
@@ -42,7 +42,7 @@ export function fetchImageByCategory(category, page) {
 // 根据 id 获取图片
 export function fetchImageById(id) {
   return request({
-    url: `http://localhost:8888/image/${id}`,
+    url: `/image/${id}`,
     method: 'get'
   })
 }
@@ -50,7 +50,7 @@ export function fetchImageById(id) {
 // 根据 id 更新图片
 export function updateImageById(data) {
   return request({
-    url: `http://localhost:8888/image/${data.id}`,
+    url: `/image/${data.id}`,
     method: 'put',
     data
   })
@@ -59,7 +59,7 @@ export function updateImageById(data) {
 // 根据 id 移除图片
 export function removeImageById(id) {
   return request({
-    url: `http://localhost:8888/image/${id}`,
+    url: `/image/${id}`,
     method: 'delete'
   })
 }

@@ -247,7 +247,7 @@ export const constantRoutes = [
     component: Layout,
     children: [
       {
-        path: 'http://localhost:8080',
+        path: process.env.VUE_APP_BASE_WEBSITE,
         meta: { title: '去官网', icon: 'link' }
       }
     ]
