@@ -63,3 +63,11 @@ export function removeImageById(id) {
     method: 'delete'
   })
 }
+
+// 获取所有图片数量
+export function fetchImageCount() {
+  return request({
+    url: `/image/count`,
+    method: 'get'
+  })
+}

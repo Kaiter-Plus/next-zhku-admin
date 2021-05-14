@@ -97,3 +97,11 @@ export function removeSpecialById(id) {
     method: 'delete'
   })
 }
+
+// 获取所有专题数量
+export function fetchSpecialCount() {
+  return request({
+    url: `/special/count`,
+    method: 'get'
+  })
+}

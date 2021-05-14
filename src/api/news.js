@@ -97,3 +97,11 @@ export function removeNewsById(id) {
     method: 'delete'
   })
 }
+
+// 获取所有新闻数量
+export function fetchNewsCount() {
+  return request({
+    url: `/news/count`,
+    method: 'get'
+  })
+}

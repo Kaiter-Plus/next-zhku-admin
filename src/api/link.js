@@ -86,3 +86,11 @@ export function createLink(data) {
     data
   })
 }
+
+// 获取所有链接数量
+export function fetchLinkCount() {
+  return request({
+    url: `/link/count`,
+    method: 'get'
+  })
+}

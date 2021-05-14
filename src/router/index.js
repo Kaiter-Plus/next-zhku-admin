@@ -107,7 +107,7 @@ export const constantRoutes = [
         path: 'leader-care',
         name: 'LeaderCare',
         component: () => import('@/views/school-profile/leader-care'),
-        meta: { title: '领导关怀' }
+        meta: { title: '领导关怀', noCache: true }
       },
       {
         path: 'school-scenery',
@@ -192,7 +192,7 @@ export const constantRoutes = [
         path: 'edit/:id(\\d+)',
         component: () => import('@/views/special/edit'),
         name: 'EditSpecial',
-        meta: { title: '编辑专题', noCache: true, activeMenu: '/special/news-list' },
+        meta: { title: '编辑专题', noCache: true, activeMenu: '/special/special-list' },
         hidden: true
       },
       {
