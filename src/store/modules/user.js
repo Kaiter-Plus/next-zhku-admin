@@ -27,8 +27,11 @@ const actions = {
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: md5(password) })
         .then(response => {
+          // 这里获取到登录成功之后的 token
           const { data } = response
+          // 把 token 放到 vuex 中
           commit('SET_TOKEN', data)
+          // 把 token 放进 cookie 中
           setToken(data)
           resolve()
         })

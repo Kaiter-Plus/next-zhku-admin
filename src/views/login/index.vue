@@ -37,6 +37,7 @@ import { validUsername } from "@/utils/validate";
 export default {
   name: "Login",
   data() {
+    // 自定义验证器
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
         callback(new Error("请输入正确的用户名"));
@@ -95,6 +96,7 @@ export default {
           this.$store
             .dispatch("user/login", this.loginForm)
             .then(() => {
+              // 登录成功周，返回原来的路径或者住目录
               this.$router.push({ path: this.redirect || "/" });
               this.$message({
                 message: '登录成功',
